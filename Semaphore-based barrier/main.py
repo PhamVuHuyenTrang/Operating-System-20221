@@ -2,7 +2,6 @@ from threading import *
 from Semaphore import Semaphore
 from Thread import Thread
 
-n = int(input("Enter the number of threads: "))
 counter = 0
 arrival = Semaphore(1)
 departure = Semaphore(0)
