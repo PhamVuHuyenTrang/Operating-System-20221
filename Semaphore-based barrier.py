@@ -17,7 +17,7 @@ def barrier(thread_name):
     else:
         departure.release()
         print("-----------------------------------------------")
-        print("All threads have reached the barriers")
+        print("All threads have reached the barriers. Start unlocking threads.")
     departure.acquire()
     print(thread_name + " has been unlocked") 
     counter -= 1
