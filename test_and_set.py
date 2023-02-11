@@ -34,17 +34,19 @@ def barrier(thread_name):
 
     if test_and_set_leader() == 0:  # leader process
         local_count = 0    
-        print(f'{thread_name} started.')
+        print(f'Leader - {thread_name} started.')
 
         while local_count < (n-1):
             # await
+
             while (countflag != 1):
                 time.sleep(1)
-
             local_count += 1
+            print(f'{thread_name} is at the barrier.')
             countflag = 0  # reset to 0
         print("=============================================")
-        print("All processes has arrived. Exiting barrier...")
+        print(f"All processes has arrived. Leader process local counter equal {local_count}. Exiting barrier...")
+
         # exit
         leader = 0  # reset
         go = 1 - go
@@ -52,15 +54,15 @@ def barrier(thread_name):
 
     else:  # other processes
         print(f'Thread {thread_name} started.')
-
         while (test_and_set_countflag() != 0):
             time.sleep(1)
+        print(f'Countflag equals {countflag}, {thread_name} is at the barrier.')
+        
         while (local_go == go):
             time.sleep(1)
 
         print(f'{thread_name} exited barrier.')
 
-    print("All threads finished.")
 
 if __name__ == '__main__':
     try:
