@@ -1,0 +1,5 @@
+﻿thread,start_time,arrival_time
+thread_0,0,1.5
+thread_1,1,4
+thread_2,1.5,2
+thread_3,2.0,6
