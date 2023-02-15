@@ -1,6 +1,7 @@
 from threading import Thread
 from random import shuffle, randint
 import time
+import datetime
 
 
 '''
@@ -28,12 +29,12 @@ def barrier(thread_name):
     global leader
     global n
     local_go = go
-
     # execute thread
     time.sleep(randint(1, 5))
 
     if test_and_set_leader() == 0:  # leader process
-        local_count = 0    
+        local_count = 0
+            
         print(f'Leader - {thread_name} started.')
 
         while local_count < (n-1):
