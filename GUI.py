@@ -115,10 +115,12 @@ ani = FuncAnimation(fig, update_plot, frames=range(7), interval=2000, repeat=Fal
 
 # buttons
 # define a list of tuples for each button
-button_data = [("Centralized Algorithm", run("centralized")),
-               ("Semaphore Algorithm", run("semaphore")),
-               ("Test-and-Set Algorithm", run("test-and-set")),
-               ("Tree-based Algorithm", run("tree"))]
+# button_data = [("Centralized Algorithm", run("centralized")),
+#                ("Semaphore Algorithm", run("semaphore")),
+#                ("Test-and-Set Algorithm", run("test-and-set")),
+#                ("Tree-based Algorithm", run("tree"))]
+
+button_data = [("Semaphore Algorithm", run("semaphore"))]
 
 # loop through the button_data and create a button for each item
 for i, (text, function) in enumerate(button_data):
