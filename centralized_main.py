@@ -3,7 +3,7 @@ from random import shuffle, randint
 import time
 counter = 0
 go = 1
-n = 6
+n = int(input("Enter the number of threads: "))
         
 def fetch_and_increment():
     global counter
