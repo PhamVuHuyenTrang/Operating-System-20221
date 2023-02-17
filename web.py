@@ -1,14 +1,22 @@
+# streamlit tools
 import streamlit as st
 import streamlit.components.v1 as components
+
+# libraries
 import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.animation import FuncAnimation
-from run_algorithm import run
-from Semaphore_based_barrier import main_semaphore 
 import time
+
+# utils
+from run_algorithm import run
+
+# algorithms
+from Semaphore_based_barrier import main_semaphore 
+from test_and_set import run_test_and_set
 
 st.write("# Barrier Synchronization Implementations")
 
@@ -24,7 +32,7 @@ elif implementation == 'Centralized Barrier':
 elif implementation == 'Combining Tree Barrier':
     algorithm = 'semaphore'
 elif implementation == 'Test and Set Barrier':
-    algorithm = 'semaphore'
+    algorithm = 'test_and_set'
 
 def create_file(implementation):
     if implementation == 'Semaphore Barrier':
@@ -33,8 +41,8 @@ def create_file(implementation):
         main_semaphore(threads_num)
     elif implementation == 'Combining Tree Barrier':
         main_semaphore(threads_num)
-    elif implementation == 'Test&Set Barrier':
-        main_semaphore(threads_num)
+    elif implementation == 'Test and Set Barrier':
+        run_test_and_set(threads_num)
 
 def handle():
     return run(algorithm)
@@ -45,11 +53,11 @@ def update_plot(frame):
     # plot the bars for each thread
     for i, row in df.iterrows():
         if frame >= row['start_time'] and frame <= row['arrival_time']:
-            duration = row['arrival_time'] - row['start_time']
+            duration = row['arrival_time'] + 1e-6 - row['start_time']
             progress = (frame - row['start_time']) / duration
-            ax.barh(i, progress * 10, height=0.8, color=sns.color_palette("pastel")[i])
+            ax.barh(i, progress * 10, height=0.8, color=sns.color_palette("pastel")[i % 10])
         elif frame > row['arrival_time']:
-            ax.barh(i, 10, height=0.8, color=sns.color_palette("pastel")[i])
+            ax.barh(i, 10, height=0.8, color=sns.color_palette("pastel")[i % 10])
     # set the y-axis limits and labels
     ax.set_ylim([0, len(df)])
     ax.set_yticks(range(len(df)))
