@@ -15,33 +15,33 @@ time_list = []
 folder_name = ("./semaphore")
 
 def barrier(thread_name):
+    global counter
+    start_time = datetime.now()
     time_list = []
     time_list.append(thread_name)
-    global counter
-    arrival.acquire()
-    start_time = datetime.now()
     time_list.append(start_time)
     time.sleep(randint(1,num))
-    counter += 1
     end_time = datetime.now()
     time_list.append(end_time)
     outfile_name = folder_name + "/" + thread_name + ".pkl"
     save_times(time_list, outfile_name)
-    print(thread_name + " has reached the barrier.")
+    arrival.acquire()
+    counter += 1
+    #print(thread_name + " has reached the barrier.")
     if counter < num:
         arrival.release()
     else:
         departure.release()
-        print("-----------------------------------------------")
-        print("All threads have reached the barriers. Start unlocking threads.")
+        #print("-----------------------------------------------")
+        #print("All threads have reached the barriers. Start unlocking threads.")
     departure.acquire()
-    print(thread_name + " has been unlocked") 
+    #print(thread_name + " has been unlocked") 
     counter -= 1
     if counter > 0:
         departure.release()
     else:
         arrival.release()
-        print("All threads have been unlocked")
+        #print("All threads have been unlocked")
         
 # creating multiple thread 
 def main_semaphore(n):  
