@@ -1,6 +1,7 @@
 import threading
 import time
 import math
+import random
 
 class Node:
     def __init__(self, size, id = None, parent=None):
@@ -84,6 +85,7 @@ def buildTree(num_threads):
 
     return tree
 
+
 def worker(node):
     """
     Function run by each thread.
@@ -93,6 +95,7 @@ def worker(node):
     time.sleep(1)
     wait(node)
     print("Thread {} is done".format(node.id))
+
 
 
 if __name__ == '__main__':

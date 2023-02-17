@@ -1,6 +1,8 @@
 from utils import load_times
 from csv import writer
 import os
+import pandas as pd
+
 # algo_name = test_and_set, semaphore, centralized, tree
 def run(algo_name):
     thread_times = []
@@ -23,14 +25,16 @@ def run(algo_name):
     #Export time to a csv file 
     head = ['thread', 'start_time', 'arrival_time']
     csv_file_name = algo_name + ".csv"  
-    with open(csv_file_name, 'w') as f_object:
-    
-        # Pass this file object to csv.writer()
-        # and get a writer object
-        writer_object = writer(f_object)
-        writer_object.writerow(head)
-        for i in range(len(files)):
-            writer_object.writerow(thread_times[i])
-    f_object.close()
-    string = algo_name + "was_called."     
-    return string
+
+    thread_dict = {}
+    thread_dict['thread'] = [x[0] for x in thread_times]
+    thread_dict['start_time'] = [x[1] for x in thread_times]
+    thread_dict['arrival_time'] = [x[2] for x in thread_times]
+
+    max_arrival_time = max(thread_dict['arrival_time'])
+
+    df_thread = pd.DataFrame(thread_dict)
+    df_thread.to_csv(csv_file_name, index=False)
+
+    return df_thread, max_arrival_time
+
