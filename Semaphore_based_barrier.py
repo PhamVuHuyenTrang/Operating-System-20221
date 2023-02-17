@@ -56,5 +56,5 @@ def main_semaphore(n):
     shuffle(threads)
 
     for thread in threads:
+        time.sleep(randint(1,n))
         thread.start()
-
