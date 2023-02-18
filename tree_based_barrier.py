@@ -1,7 +1,13 @@
 import threading
 import time
 import math
-import random
+from datetime import datetime
+from utils import save_times
+from random import randint
+
+folder_name = ("./tree_barrier")
+thread_nums = 1
+# time_list = []
 
 class Node:
     def __init__(self, size, id = None, parent=None):
@@ -10,7 +16,8 @@ class Node:
         """
         self.size = size
         self.parent = parent
-        self.id = id      
+        self.id = id 
+        self.leave = False     
         self.lock_sense = False
         self.count = size
         self.root = False
@@ -33,6 +40,15 @@ class Node:
         self.count -= 1
         self.lock.release()
         return current_value
+    
+    def __str__(self):
+        return self.id
+    
+    def get_leave(self):
+        return self.leave
+    
+    def set_leave(self):
+        self.leave = True
 
 sense = True 
 
@@ -42,6 +58,13 @@ def wait(node):
     """
     global sense
     print(f"{node.id} reach the barrier")
+
+    # if node.get_leave():
+    #     end_time = datetime.now()
+    #     time_list.append(end_time)
+    #     outfile_name = folder_name + "/" + node.id + ".pkl"
+    #     save_times(time_list, outfile_name)
+        
 
     if node.parent.fetch_and_decrement() == 1:
         if node.parent is not None and node.parent.root != True:
@@ -66,6 +89,7 @@ def buildTree(num_threads):
         for i in range(num_nodes):
             if layers == 0:
                 new_node = Node(0, id = str(layers)+"-"+str(i))
+                new_node.set_leave()
             else:               
                 new_node = Node(0, id = str(layers)+"-"+str(i))
                 new_node.set_child(tree[layers-1][2*i])
@@ -90,25 +114,38 @@ def worker(node):
     """
     Function run by each thread.
     """
+    global thread_nums
     print("Thread {} is starting".format(node.id))
+    start_time = datetime.now()
+    time_list = []
+    time_list.append(node.id)
+    time_list.append(start_time)
+
     # Do some work
-    time.sleep(1)
+    time.sleep(randint(1,thread_nums))
+
+    end_time = datetime.now()
+    time_list.append(end_time)
+    outfile_name = folder_name + "/" + node.id + ".pkl"
+    save_times(time_list, outfile_name)
     wait(node)
+
     print("Thread {} is done".format(node.id))
 
+    # end_time = datetime.now()
+    # time_list.append(end_time)
+    # outfile_name = folder_name + "/" + node.id + ".pkl"
+    # save_times(time_list, outfile_name)
+    # time_list = []
 
 
-if __name__ == '__main__':
-    try:
-        num_threads = int(input("Number of threads: "))
-        if num_threads <= 1:
-            raise Exception
-    except ValueError as e:
-        raise ValueError('Number of threads should be a number').with_traceback(e.__traceback__)
-    except Exception as e:
-        raise Exception('Number of threads should be a number larger than 1')
 
+def run_tree_barrier(num_threads):
+    global thread_nums
+    thread_nums = num_threads
     barrier = buildTree(num_threads)
+    print(barrier)
+
     print(f"Tree built with {num_threads} threads:")
     for index,layer in enumerate(barrier):
         for i in layer:
@@ -121,6 +158,7 @@ if __name__ == '__main__':
     for i in barrier[0]:
         t = threading.Thread(target=worker, args=(i,))
         threads.append(t)
+        time.sleep(randint(1,num_threads-1))
         t.start()
     
     for t in threads:

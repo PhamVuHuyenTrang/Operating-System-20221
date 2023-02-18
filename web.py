@@ -17,6 +17,7 @@ from run_algorithm import run
 # algorithms
 from Semaphore_based_barrier import main_semaphore 
 from test_and_set import run_test_and_set
+from tree_based_barrier import run_tree_barrier
 
 st.write("# Barrier Synchronization Implementations")
 
@@ -24,13 +25,12 @@ threads_num = st.number_input("**Number of threads/process**", 0, 32)
 
 implementation = st.radio("**Implementation**", ('Centralized Barrier', 'Combining Tree Barrier', 'Test and Set Barrier', 'Semaphore Barrier'))
 
-
 if implementation == 'Semaphore Barrier':
     algorithm = 'semaphore'
 elif implementation == 'Centralized Barrier':
     algorithm = 'semaphore'
 elif implementation == 'Combining Tree Barrier':
-    algorithm = 'semaphore'
+    algorithm = 'tree_barrier'
 elif implementation == 'Test and Set Barrier':
     algorithm = 'test_and_set'
 
@@ -40,11 +40,14 @@ def create_file(implementation):
     elif implementation == 'Centralized Barrier':
         main_semaphore(threads_num)
     elif implementation == 'Combining Tree Barrier':
-        main_semaphore(threads_num)
+        run_tree_barrier(threads_num)
     elif implementation == 'Test and Set Barrier':
         run_test_and_set(threads_num)
 
-def handle():
+def create_csv():
+    """
+    Create the csv file
+    """
     return run(algorithm)
 
 # define a function to update the bar chart for each time step
@@ -82,13 +85,13 @@ def update_plot(frame):
             arrival_text = "- **{}** :red[arrived] at the barrier at: **:red[{}]** seconds".format(row['thread'], row['arrival_time'])
             text.append(arrival_text)
 
+# Create the buttons 
 col1, col2, col3 = st.columns(3)
 start_button = col2.button('Start')
 create_button = col1.button("Create demonstration")
 
 def check_num_files():
     folder_path = './' + algorithm
-
     # Get a list of all the files in the folder
     files = os.listdir(folder_path)
     # Count the number of files
@@ -123,7 +126,7 @@ if create_button:
 if start_button:
     st.snow()
 
-    df, max_time = handle()
+    df, max_time = create_csv()
     text = []
 
     # calculate the duration of each thread
