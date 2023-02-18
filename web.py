@@ -19,6 +19,8 @@ from Semaphore_based_barrier import main_semaphore
 from test_and_set import run_test_and_set
 from tree_based_barrier import run_tree_barrier
 
+log = []
+
 st.write("# Barrier Synchronization Implementations")
 
 threads_num = st.number_input("**Number of threads/process**", 0, 32)
@@ -52,6 +54,7 @@ def create_csv():
 
 # define a function to update the bar chart for each time step
 def update_plot(frame):
+    global log
     ax.clear()
     # plot the bars for each thread
     for i, row in df.iterrows():
@@ -80,10 +83,10 @@ def update_plot(frame):
     for i, row in df.iterrows():
         if frame == row['start_time']:
             start_text = '- **{}** :blue[started] at: **:blue[{}]** seconds'.format(row['thread'], row['start_time'])
-            text.append(start_text)
+            log.append(start_text)
         if frame == row['arrival_time']:
             arrival_text = "- **{}** :red[arrived] at the barrier at: **:red[{}]** seconds".format(row['thread'], row['arrival_time'])
-            text.append(arrival_text)
+            log.append(arrival_text)
 
 # Create the buttons 
 col1, col2, col3 = st.columns(3)
@@ -127,7 +130,6 @@ if start_button:
     st.snow()
 
     df, max_time = create_csv()
-    text = []
 
     # calculate the duration of each thread
     df['duration'] = df['arrival_time'] - df['start_time']
@@ -146,14 +148,14 @@ if start_button:
     f"#### Here is the demonstration of :blue[{implementation}]:"
     
     # create an animation object
-    ani = FuncAnimation(fig, update_plot, frames=range(max_time+4), interval=1500, repeat=True)
+    ani = FuncAnimation(fig, update_plot, frames=range(max_time+1), interval=1500, repeat=True)
     components.html(ani.to_jshtml(), height=700)
 
     f"#### Here is the :blue[log] of all threads/processes:"
-    for thread_log in text:
+    for thread_log in log:
         thread_log
 
-    # empty the text for next demo
-    text = []
+    # empty the log for next demo
+    log = []
     
     

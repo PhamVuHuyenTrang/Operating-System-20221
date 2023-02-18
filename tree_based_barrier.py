@@ -17,7 +17,6 @@ class Node:
         self.size = size
         self.parent = parent
         self.id = id 
-        self.leave = False     
         self.lock_sense = False
         self.count = size
         self.root = False
@@ -43,12 +42,6 @@ class Node:
     
     def __str__(self):
         return self.id
-    
-    def get_leave(self):
-        return self.leave
-    
-    def set_leave(self):
-        self.leave = True
 
 sense = True 
 
@@ -58,13 +51,6 @@ def wait(node):
     """
     global sense
     print(f"{node.id} reach the barrier")
-
-    # if node.get_leave():
-    #     end_time = datetime.now()
-    #     time_list.append(end_time)
-    #     outfile_name = folder_name + "/" + node.id + ".pkl"
-    #     save_times(time_list, outfile_name)
-        
 
     if node.parent.fetch_and_decrement() == 1:
         if node.parent is not None and node.parent.root != True:
@@ -88,8 +74,7 @@ def buildTree(num_threads):
         layer = []
         for i in range(num_nodes):
             if layers == 0:
-                new_node = Node(0, id = str(layers)+"-"+str(i))
-                new_node.set_leave()
+                new_node = Node(0, id = "Thread "+ str(i))
             else:               
                 new_node = Node(0, id = str(layers)+"-"+str(i))
                 new_node.set_child(tree[layers-1][2*i])
@@ -132,28 +117,12 @@ def worker(node):
 
     print("Thread {} is done".format(node.id))
 
-    # end_time = datetime.now()
-    # time_list.append(end_time)
-    # outfile_name = folder_name + "/" + node.id + ".pkl"
-    # save_times(time_list, outfile_name)
-    # time_list = []
-
-
 
 def run_tree_barrier(num_threads):
     global thread_nums
     thread_nums = num_threads
     barrier = buildTree(num_threads)
-    print(barrier)
-
-    print(f"Tree built with {num_threads} threads:")
-    for index,layer in enumerate(barrier):
-        for i in layer:
-            try:
-                print("Node: ", i.id, "Parent:",i.parent.id, "Size:", i.size)
-            except:
-                print("Node: ", i.id, "Size:", i.size)
-
+    
     threads = []
     for i in barrier[0]:
         t = threading.Thread(target=worker, args=(i,))
