@@ -52,6 +52,9 @@ def create_csv():
     """
     return run(algorithm)
 
+def init():
+    pass
+
 # define a function to update the bar chart for each time step
 def update_plot(frame):
     global log
@@ -81,9 +84,11 @@ def update_plot(frame):
     ax.set_title('Process synchronization (Time = {0:.2f})'.format(frame))
 
     for i, row in df.iterrows():
+        # print(i)
         if frame == row['start_time']:
             start_text = '- **{}** :blue[started] at: **:blue[{}]** seconds'.format(row['thread'], row['start_time'])
             log.append(start_text)
+            # print(start_text)
         if frame == row['arrival_time']:
             arrival_text = "- **{}** :red[arrived] at the barrier at: **:red[{}]** seconds".format(row['thread'], row['arrival_time'])
             log.append(arrival_text)
@@ -136,7 +141,7 @@ if start_button:
 
     # set up the plot
     sns.set_style('whitegrid')
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(7, 5))
     ax.set_ylim([0, len(df)])
     ax.set_yticks(range(len(df)))
     ax.set_yticklabels(df['thread'])
@@ -148,8 +153,8 @@ if start_button:
     f"#### Here is the demonstration of :blue[{implementation}]:"
     
     # create an animation object
-    ani = FuncAnimation(fig, update_plot, frames=range(max_time+1), interval=1500, repeat=True)
-    components.html(ani.to_jshtml(), height=700)
+    ani = FuncAnimation(fig, update_plot, frames=range(0,max_time+1), init_func=init, interval=1500, repeat=True)
+    components.html(ani.to_jshtml(), height=600)
 
     f"#### Here is the :blue[log] of all threads/processes:"
     for thread_log in log:

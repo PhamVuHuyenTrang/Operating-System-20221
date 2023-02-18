@@ -107,7 +107,7 @@ def worker(node):
     time_list.append(start_time)
 
     # Do some work
-    time.sleep(randint(1,thread_nums))
+    time.sleep(randint(2,thread_nums))
 
     end_time = datetime.now()
     time_list.append(end_time)
@@ -122,12 +122,12 @@ def run_tree_barrier(num_threads):
     global thread_nums
     thread_nums = num_threads
     barrier = buildTree(num_threads)
-    
+
     threads = []
     for i in barrier[0]:
         t = threading.Thread(target=worker, args=(i,))
         threads.append(t)
-        time.sleep(randint(1,num_threads-1))
+        time.sleep(randint(1,2))
         t.start()
     
     for t in threads:
