@@ -18,6 +18,7 @@ from run_algorithm import run
 from Semaphore_based_barrier import main_semaphore 
 from test_and_set import run_test_and_set
 from tree_based_barrier import run_tree_barrier
+from centralized import main_centralized
 
 log = []
 
@@ -30,7 +31,7 @@ implementation = st.radio("**Implementation**", ('Centralized Barrier', 'Combini
 if implementation == 'Semaphore Barrier':
     algorithm = 'semaphore'
 elif implementation == 'Centralized Barrier':
-    algorithm = 'semaphore'
+    algorithm = 'centralized'
 elif implementation == 'Combining Tree Barrier':
     algorithm = 'tree_barrier'
 elif implementation == 'Test and Set Barrier':
@@ -40,7 +41,7 @@ def create_file(implementation):
     if implementation == 'Semaphore Barrier':
         main_semaphore(threads_num)
     elif implementation == 'Centralized Barrier':
-        main_semaphore(threads_num)
+        main_centralized(threads_num)
     elif implementation == 'Combining Tree Barrier':
         run_tree_barrier(threads_num)
     elif implementation == 'Test and Set Barrier':
